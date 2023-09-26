@@ -13,3 +13,13 @@ To install the project's Python runtime version, run:
 ```
 $ pyenv install $(cat runtime.txt | sed 's/python-//g')
 ```
+
+## Deployment management
+
+Using Heroku.
+
+Install the Heroku CLI, then run:
+
+```
+$ heroku login
+```
