@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "install": "npm install --prefix frontend"
+  },
+  "dependencies": {
+    "--legacy-peer-deps": "^0.0.1-security.6"
+  }
+}
