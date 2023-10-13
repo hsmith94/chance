@@ -1,24 +1,23 @@
+from os.path import abspath
+
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+
+from backend.routes import router
 
 app = FastAPI()
 
+@app.get('/')
+def redirect():
+    response = RedirectResponse(url='/app')
+    return response
 
-@app.get("/")
-def read_root():
-    return {"200": "Welcome To Heroku"}
+app.mount('/app', StaticFiles(directory=abspath('./frontend/build')), name='static')
+app.mount('/static', StaticFiles(directory=abspath('./frontend/build/static')), name='static')
 
+@app.get('/ping')
+def health_check():
+    return {'200': 'pong'}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.get("/fizz_buzz/{num}")
-def read_item(num: int):
-    # https: // ja.wikipedia.org / wiki / Fizz_Buzz
-    if not num % 15:
-        return {num: "Fizz Buzz"}
-    elif not num % 5 or not num % 3:
-        return {num: 'Fizz' if not num % 3 else 'Buzz'}
-    else:
-        return {num: 'Stay Silent'}
+app.include_router(router)

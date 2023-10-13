@@ -89,3 +89,9 @@ Deploying code:
 ```
 $ git push heroku master
 ```
+
+# Frontend
+
+```
+$ brew install watchman
+```

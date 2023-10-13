@@ -5,6 +5,9 @@
         "source.fixAll": true,
         "source.organizeImports": true
     },
+    "[jsx-tags]": {
+        "editor.defaultFormatter": ""
+    },
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -13,6 +16,7 @@
     },
     "cSpell.words": [
         "fastapi",
+        "pressable",
         "pyenv",
         "virtualenv"
     ]
