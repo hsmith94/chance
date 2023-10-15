@@ -1,3 +1,13 @@
+# Chance
+
+The app that reminds you to keep in touch!
+
+![Chance App UI](./docs/assets/chance-app-ui-v1.1.png)
+
+![Chance App UI](./docs/assets/chance-app-ui-v1.2.png)
+
+# Development
+
 #### Python version management
 
 Recommended to use Pyenv for Python version management.

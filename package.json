@@ -2,9 +2,11 @@
   "scripts": {
     "install": "npm install --prefix frontend",
     "build": "npm run build-web --prefix frontend",
-    "start": "python start.py"
+    "start": "python start.py",
+    "dev-pretty": "concurrently -n frontend,backend -c magenta,green \"python start-dev.py\" \"npm run web --prefix frontend\"",
+    "dev": "npm run dev-pretty -- --raw"
   },
   "engines": {
-    "node": ">=16"
+    "node": "16"
   }
 }
