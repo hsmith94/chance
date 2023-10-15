@@ -1,7 +1,7 @@
 import backend.auth_api.auth_utils as auth_utils
 import backend.database as db
 from backend.auth_api.tokens import get_token, make_token
-from backend.errors import ER_USER_ALREADY_EXISTS, ER_USER_NOT_FOUND
+from backend.config.errors import ER_USER_ALREADY_EXISTS, ER_USER_NOT_FOUND
 
 
 def register(username: str, password: str):

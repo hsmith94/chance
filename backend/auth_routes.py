@@ -3,8 +3,8 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
 import backend.auth_api.auth_service as auth_service
-from backend.config import AUTH_API_BASE_URL
-from backend.errors import ER_USER_ALREADY_EXISTS, ER_USER_NOT_FOUND
+from backend.config.constants import AUTH_API_BASE_URL
+from backend.config.errors import ER_USER_ALREADY_EXISTS, ER_USER_NOT_FOUND
 
 auth_router = APIRouter(prefix=f"{AUTH_API_BASE_URL}")
 

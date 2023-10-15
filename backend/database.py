@@ -1,7 +1,7 @@
 import os
 
-import backend.environment as env
-from backend.errors import ER_FRIEND_NOT_FOUND, ER_USER_NOT_FOUND
+import backend.config.environment as env
+from backend.config.errors import ER_FRIEND_NOT_FOUND, ER_USER_NOT_FOUND
 
 
 class User:

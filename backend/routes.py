@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from backend.config import API_BASE_URL
+from backend.config.constants import API_BASE_URL
 
 router = APIRouter(prefix=f'{API_BASE_URL}')
 
