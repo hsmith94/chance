@@ -1,6 +1,7 @@
 import os
 
 import backend.environment as env
+from backend.errors import ER_FRIEND_NOT_FOUND, ER_USER_NOT_FOUND
 
 
 class User:
@@ -57,15 +58,18 @@ def _get_from_table_by_property(table_name: str, property: str, value):
 def get_user_by_username_password_hash(username: str, password_hash: str) -> User:
     users_table = current_database['users']
     users_rows = [row for row in users_table if row.username == username and row.password_hash == password_hash]
+    if (len(users_rows) == 0):
+        raise Exception(ER_USER_NOT_FOUND)
     return users_rows[0]
 
 def get_user(user_id: str) -> User:
-    users_row = _get_from_table_by_property('users', 'id', user_id)
-    return users_row[0]
+    users_rows = _get_from_table_by_property('users', 'id', user_id)
+    if (len(users_rows) == 0):
+        raise Exception(ER_USER_NOT_FOUND)
+    return users_rows[0]
 
 def user_exists(username: str) -> bool:
-    users_table = current_database['users']
-    users_rows = [row for row in users_table if row.username == username]
+    users_rows = _get_from_table_by_property('users', 'username', username)
     return len(users_rows) != 0
 
 def put_user(user: User) -> None:
@@ -74,6 +78,8 @@ def put_user(user: User) -> None:
 
 def get_friend(friend_id: str) -> Friend:
     friends_row = _get_from_table_by_property('friends', 'id', friend_id)
+    if (len(friends_row) == 0):
+        raise Exception(ER_FRIEND_NOT_FOUND)
     return friends_row[0]
 
 def put_friend(friend: Friend) -> None:
