@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api")
+from backend.config import API_BASE_URL
+
+router = APIRouter(prefix=f'{API_BASE_URL}')
 
 @router.get('/items/{item_id}')
 def read_item(item_id: int, q: str = None):
@@ -16,3 +18,4 @@ def read_item(num: int):
         return {num: 'Fizz' if not num % 3 else 'Buzz'}
     else:
         return {num: 'Stay Silent'}
+    

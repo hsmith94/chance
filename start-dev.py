@@ -2,7 +2,7 @@ import uvicorn
 
 uvicorn.run(
     "backend.main:app",
-    host    = "0.0.0.0",
+    host    = "localhost",
     port    = 8080,
-    reload  = True,
+    # reload  = True, # FIXME: `reload=True` gives `[Errno 48] Address already in use`
 )

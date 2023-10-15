@@ -3,7 +3,9 @@
     "install": "npm install --prefix frontend",
     "build": "npm run build-web --prefix frontend",
     "start": "python start.py",
-    "dev-pretty": "concurrently -n frontend,backend -c magenta,green \"python start-dev.py\" \"npm run web --prefix frontend\"",
+    "backend:dev": "python start-dev.py",
+    "frontend:dev": "npm run web --prefix frontend",
+    "dev-pretty": "concurrently -n frontend,backend -c magenta,green \"npm:backend:dev\" \"npm:frontend:dev\"",
     "dev": "npm run dev-pretty -- --raw"
   },
   "engines": {

@@ -5,6 +5,11 @@
         "source.fixAll": true,
         "source.organizeImports": true
     },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.expo": true,
+        "**/package-lock.json": true,
+    },
     "[jsx-tags]": {
         "editor.defaultFormatter": ""
     },
