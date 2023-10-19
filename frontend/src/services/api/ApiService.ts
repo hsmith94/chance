@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { BASE_URL } from '../config/variables';
-import { ApiServiceConfig, BaseApiService } from './abstract/BaseApiService';
-import { Requests } from './abstract/Requests';
+import { BASE_URL } from '../../config/variables';
+import { ApiServiceConfig, BaseApiService } from './shared/BaseApiService';
+import { Requests } from './shared/Requests';
 
 export class ApiService extends BaseApiService {
     constructor(httpCreator: Requests.ICreator<Requests.IHttpSender>, config: ApiServiceConfig) {

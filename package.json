@@ -6,7 +6,7 @@
     "backend:dev": "python start-dev.py",
     "frontend:dev": "npm run web --prefix frontend",
     "dev-pretty": "concurrently -n frontend,backend -c magenta,green \"npm:backend:dev\" \"npm:frontend:dev\"",
-    "dev": "npm run dev-pretty -- --raw"
+    "dev": ". dev.env && npm run dev-pretty -- --raw"
   },
   "engines": {
     "node": "16"
