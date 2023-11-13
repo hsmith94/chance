@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, TextInput, View } from 'react-native';
 import { PASSWORD_MIN_LENGTH } from '../../../config/constants';
-import { ER_PASSWORDS_DO_NOT_MATCH, ER_PASSWORD_TOO_SHORT } from '../errors';
+import { ER_PASSWORDS_DO_NOT_MATCH, ER_PASSWORD_TOO_SHORT, VALIDATION_ERRORS } from '../errors';
 
 type UsernamePasswordFormProps = {
     action: string;
@@ -16,14 +16,30 @@ function UsernamePasswordForm({ action, onSubmit, hasConfirmPassword }: Username
 
     hasConfirmPassword = hasConfirmPassword ?? false;
 
-    const handleSubmit = () => {
+    function validateForm(): true | never {
         if (password.length < PASSWORD_MIN_LENGTH) {
             throw Error(ER_PASSWORD_TOO_SHORT);
         }
         if (hasConfirmPassword && password !== confirmPassword) {
             throw Error(ER_PASSWORDS_DO_NOT_MATCH);
         }
-        onSubmit(username, password);
+        return true;
+    }
+
+    const handleSubmit = () => {
+        try {
+            validateForm();
+            onSubmit(username, password);
+        } catch (err: any) {
+            if (!(err instanceof Error)) {
+                throw err;
+            }
+            if (VALIDATION_ERRORS.includes(err.message)) {
+                alert('Login failed: ' + err.message);
+            } else {
+                alert('Login failed: An internal error ocurred');
+            }
+        }
     };
 
     return (

@@ -1,4 +1,3 @@
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -6,13 +5,9 @@ import LoadingSpinner from './components/LoadingSpinner';
 import { LOCAL_URL, PUBLIC_URL } from './config/constants';
 import { ENV } from './config/environment';
 import { LoadingProvider, useLoadingContext } from './contexts/Loading/LoadingProvider';
-import { SettingsStackScreen } from './random';
-import FriendsStackScreen from './screens/friends/FriendsStackScreen';
-import HomeStackScreen from './screens/home/HomeStackScreen';
-import LoginStackScreen from './screens/login/LoginStackScreen';
-import { SCREENS_MAPPING } from './screens/screens-mapping';
-
-const Tab = createMaterialBottomTabNavigator();
+import { SCREENS_MAPPING } from './screens-mapping';
+import LoginStackScreen from './stacks/login/LoginStackScreen';
+import { MainStackScreen } from './stacks/main/MainStackScreen';
 
 export default function App() {
     const { isLoading } = useLoadingContext();
@@ -37,29 +32,7 @@ export default function App() {
         <LoadingProvider>
             <NavigationContainer linking={linking}>
                 {isSignedIn ? (
-                    <Tab.Navigator initialRouteName="Home">
-                        <Tab.Screen
-                            name="Home"
-                            component={HomeStackScreen}
-                            options={{
-                                tabBarIcon: 'home',
-                            }}
-                        />
-                        <Tab.Screen
-                            name="Friends"
-                            component={FriendsStackScreen}
-                            options={{
-                                tabBarIcon: 'heart',
-                            }}
-                        />
-                        <Tab.Screen
-                            name="Settings"
-                            component={SettingsStackScreen}
-                            options={{
-                                tabBarIcon: 'cog',
-                            }}
-                        />
-                    </Tab.Navigator>
+                    <MainStackScreen onSignOut={() => setIsSignedIn(false)} />
                 ) : (
                     <LoginStackScreen onSignIn={() => setIsSignedIn(true)} />
                 )}

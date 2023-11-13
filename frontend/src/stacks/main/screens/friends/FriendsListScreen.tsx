@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, List, Text } from 'react-native-paper';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { useLoadingContext } from '../../contexts/Loading/LoadingProvider';
-import { Friend } from '../../models/Friend/Friend';
-import { apiService } from '../../services/api/ApiService';
+import LoadingSpinner from '../../../../components/LoadingSpinner';
+import { useLoadingContext } from '../../../../contexts/Loading/LoadingProvider';
+import { Friend } from '../../../../models/Friend/Friend';
+import { apiService } from '../../../../services/api/ApiService';
 
 const DEFAULT_PADDING = 20;
 
