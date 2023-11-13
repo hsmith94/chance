@@ -1,28 +1,38 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLoadingContext } from '../../contexts/Loading/LoadingProvider';
+import { Friend } from '../../models/Friend/Friend';
+import { apiService } from '../../services/api/ApiService';
 
 export default function FriendScreen({ route, navigation }) {
     const { isLoading, setIsLoading } = useLoadingContext();
+    const [friend, setFriend] = useState<Friend>();
 
     const { friendId } = route.params;
 
-    const friend = {
-        id: friendId,
-        name: '< name goes here >', // TODO: Fetch this from backend
-    };
-
-    if (!isLoading) {
+    useEffect(() => {
         setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2 * 1000);
-    }
+        apiService
+            .getFriend(friendId)
+            .then((response) => {
+                setFriend(response.friend);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
 
     return (
         <View style={styles.container}>
-            <Text>{friend.name}</Text>
-            <Text>{friend.id}</Text>
+            {friend ? (
+                <>
+                    <Text variant="headlineMedium">{friend.name}</Text>
+                    <Text variant="labelSmall">{friend.id}</Text>
+                </>
+            ) : null}
+            <LoadingSpinner isLoading={isLoading} />
         </View>
     );
 }

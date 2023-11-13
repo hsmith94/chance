@@ -1,8 +1,8 @@
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import LoadingSpinner from './components/LoadingSpinner';
 import { LOCAL_URL, PUBLIC_URL } from './config/constants';
 import { ENV } from './config/environment';
 import { LoadingProvider, useLoadingContext } from './contexts/Loading/LoadingProvider';
@@ -64,37 +64,9 @@ export default function App() {
                     <LoginStackScreen onSignIn={() => setIsSignedIn(true)} />
                 )}
             </NavigationContainer>
-            {isLoading ? (
-                <View style={styles.backdrop}>
-                    <ActivityIndicator size={120} style={styles.spinner} />
-                </View>
-            ) : null}
+            <LoadingSpinner isLoading={isLoading} />
         </LoadingProvider>
     );
 }
 
-const styles = StyleSheet.create({
-    backdrop: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#000000',
-        backdropFilter: 'brightness(0.2) blur(20px)',
-        opacity: 0.5,
-        zIndex: 998,
-    },
-    spinner: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-    },
-});
+const styles = StyleSheet.create({});

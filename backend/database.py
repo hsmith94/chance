@@ -1,7 +1,8 @@
 import os
 
 import backend.config.environment as env
-from backend.config.errors import ER_FRIEND_NOT_FOUND, ER_USER_NOT_FOUND
+from backend.config.errors import (ER_FRIEND_NOT_FOUND, ER_NOT_FRIEND_OF_USER,
+                                   ER_USER_NOT_FOUND)
 
 
 class User:
@@ -30,15 +31,30 @@ class User:
 
 class Friend:
     id: str
+    friend_of: str
     name: str
 
-    def __init__(self, friend_id: str):
+    def __init__(self, friend_id: str, friend_of: str, name: str):
         self.id = friend_id
+        self.friend_of = friend_of
+        self.name = name
+
+    def to_response(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
 
 def make_database():
     return {
         'users': [],
-        'friends': [],
+        'friends': [
+            # Test data (TODO: REMOVE!!)
+            Friend(friend_id='friend-1', friend_of='Harry', name='John Doe'),
+            Friend(friend_id='friend-2', friend_of='Harry', name='Jane Doe'),
+            Friend(friend_id='friend-3', friend_of='Harry', name='John Smith'),
+            Friend(friend_id='friend-4', friend_of='Harry', name='Jane Smith'),
+        ],
     }
 
 DATABASE = {
@@ -54,6 +70,10 @@ current_database = _get_current_database()
 def _get_from_table_by_property(table_name: str, property: str, value):
     table = current_database[table_name]
     return [row for row in table if getattr(row, property) == value]
+
+def _get_from_table_by_properties(table_name: str, properties: dict):
+    table = current_database[table_name]
+    return [row for row in table if all([getattr(row, property) == value for property, value in properties.items()])]
 
 def get_user_by_username_password_hash(username: str, password_hash: str) -> User:
     users_table = current_database['users']
@@ -76,11 +96,17 @@ def put_user(user: User) -> None:
     current_database['users'].append(user)
     print(current_database)
 
-def get_friend(friend_id: str) -> Friend:
-    friends_row = _get_from_table_by_property('friends', 'id', friend_id)
+def get_friends(user_id: str) -> list[Friend]:
+    friends_rows = _get_from_table_by_property('friends', 'friend_of', user_id)
+    return friends_rows
+
+def get_friend(user_id: str, friend_id: str) -> Friend:
+    friends_row = _get_from_table_by_properties('friends', {'friend_of': user_id, 'id': friend_id})
     if (len(friends_row) == 0):
         raise Exception(ER_FRIEND_NOT_FOUND)
     return friends_row[0]
 
-def put_friend(friend: Friend) -> None:
+def put_friend(user_id: str, friend: Friend) -> None:
+    if (user_id != friend.friend_of):
+        raise Exception(ER_NOT_FRIEND_OF_USER)
     current_database['friends'].append(friend)
