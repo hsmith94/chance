@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import backend.config.environment as env
 from backend.config.errors import (ER_FRIEND_NOT_FOUND, ER_NOT_FRIEND_OF_USER,
@@ -17,10 +18,10 @@ class User:
     @staticmethod
     def from_username_password(username: str, password_hash: str):
         user_id = username; # Use username as user_id
-        self = User(user_id)
-        self.username = username
-        self.password_hash = password_hash
-        return self
+        user = User(user_id)
+        user.username = username
+        user.password_hash = password_hash
+        return user
     
     def to_response(self) -> dict:
         return {
@@ -33,6 +34,10 @@ class Friend:
     id: str
     friend_of: str
     name: str
+
+    @staticmethod
+    def make_id() -> str:
+        return str(uuid.uuid4())
 
     def __init__(self, friend_id: str, friend_of: str, name: str):
         self.id = friend_id

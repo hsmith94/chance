@@ -1,6 +1,5 @@
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
 import LoadingSpinner from './components/LoadingSpinner';
 import { LOCAL_URL, PUBLIC_URL } from './config/constants';
 import { ENV } from './config/environment';
@@ -41,5 +40,3 @@ export default function App() {
         </LoadingProvider>
     );
 }
-
-const styles = StyleSheet.create({});

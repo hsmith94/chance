@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, List, Text } from 'react-native-paper';
 import LoadingSpinner from '../../../../components/LoadingSpinner';
 import { useLoadingContext } from '../../../../contexts/Loading/LoadingProvider';
@@ -19,18 +19,23 @@ function FriendsList({ friendsList, navigation, addNewFriend }: FriendsListProps
     const hasFriendsList = friendsList && friendsList.length > 0;
 
     const renderFriendsList = () => {
-        return friendsList.map((friend: Friend, index: number) => (
-            <List.Item
-                key={index}
-                onPress={() =>
-                    navigation.navigate('Friend', {
-                        friendId: friend.id,
-                    })
-                }
-                title={friend.name}
-                left={() => <List.Icon icon="account-circle" style={{ paddingLeft: DEFAULT_PADDING }} />}
-            />
-        ));
+        return (
+            <List.Section style={styles.list}>
+                <List.Subheader>My Friends</List.Subheader>
+                {friendsList.map((friend: Friend) => (
+                    <List.Item
+                        key={friend.id}
+                        onPress={() =>
+                            navigation.navigate('Friend', {
+                                friendId: friend.id,
+                            })
+                        }
+                        title={friend.name}
+                        left={() => <List.Icon icon="account-circle" style={{ paddingLeft: DEFAULT_PADDING }} />}
+                    />
+                ))}
+            </List.Section>
+        );
     };
 
     const renderEmptyListMessage = () => {
@@ -44,10 +49,9 @@ function FriendsList({ friendsList, navigation, addNewFriend }: FriendsListProps
 
     return (
         <>
-            <List.Section style={styles.list}>
-                <List.Subheader>My Friends</List.Subheader>
+            <ScrollView style={{ width: '100%' }}>
                 {hasFriendsList ? renderFriendsList() : renderEmptyListMessage()}
-            </List.Section>
+            </ScrollView>
             <Button onPress={() => addNewFriend()} icon="plus">
                 New Friend
             </Button>
@@ -58,7 +62,6 @@ function FriendsList({ friendsList, navigation, addNewFriend }: FriendsListProps
 export default function FriendsListScreen({ navigation }) {
     const { isLoading, setIsLoading } = useLoadingContext();
 
-    // const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [friendsList, setFriendsList] = useState<Friend[]>([]);
 
     const hasFriendsList = friendsList && friendsList.length > 0;
@@ -80,31 +83,16 @@ export default function FriendsListScreen({ navigation }) {
         }
     }, []);
 
-    // const showNewFriendModal = () => setIsModalVisible(true);
-    // const hideNewFriendModal = () => setIsModalVisible(false);
-
-    function addNewFriend() {
+    async function addNewFriend() {
         console.log('Adding new friend!');
         // showNewFriendModal();
+        await apiService.createFriend({ name: 'New Friend' }).then((response) => {
+            console.log('Created new friend!');
+            navigation.navigate('Friend', {
+                friendId: response.friendId,
+            });
+        });
     }
-
-    // return (
-    //     <>
-    //         <PaperProvider>
-    //             <Portal>
-    //                 <Modal
-    //                     visible={isModalVisible}
-    //                     onDismiss={hideNewFriendModal}
-    //                     contentContainerStyle={styles.modalContentContainer}
-    //                 >
-    //                     <NewFriendModalContent />
-    //                 </Modal>
-    //             </Portal>
-    //             <FriendsList friendsList={friendsList} navigation={navigation} addNewFriend={addNewFriend} />
-    //         </PaperProvider>
-    //         <LoadingSpinner isLoading={isLoading} />
-    //     </>
-    // );
 
     return (
         <View style={styles.container}>
@@ -117,21 +105,15 @@ export default function FriendsListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    // modalContentContainer: {
-    //     padding: DEFAULT_PADDING,
-    //     backgroundColor: 'white',
-    //     // FIXME: It's probably not right to apply these styles here
-    //     width: '80%',
-    //     left: '50%',
-    //     transform: [{ translateX: '-50%' as any }],
-    // },
     container: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
     },
+    button: {},
     list: {
         flex: 1,
         width: '100%',

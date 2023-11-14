@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { BASE_URL } from '../../config/variables';
-import { Friend } from '../../models/Friend/Friend';
+import { CreateFriend, Friend } from '../../models/Friend/Friend';
 import { ApiServiceConfig, BaseApiService } from './shared/BaseApiService';
 import { Requests } from './shared/Requests';
 import { extract } from './shared/extract';
@@ -10,6 +10,7 @@ type AR<T> = AxiosResponse<T>; // TODO: Refactor http sender to intrinsically ex
 
 type FriendsListResponse = { friends: Friend[] };
 type FriendResponse = { friend: Friend };
+type CreateFriendResponse = { friendId: Friend['id'] };
 
 export class ApiService extends BaseApiService {
     constructor(httpCreator: Requests.ICreator<Requests.IHttpSender>, config: ApiServiceConfig) {
@@ -22,10 +23,17 @@ export class ApiService extends BaseApiService {
             .then(extract)
             .catch(rethrow);
     }
-    async getFriend(friendId: string): Promise<FriendResponse> {
+    async getFriend(friendId: Friend['id']): Promise<FriendResponse> {
         // prettier-ignore
         return this.http
             .get<AR<FriendResponse>>(this.makeUrl('friends', friendId))
+            .then(extract)
+            .catch(rethrow);
+    }
+    async createFriend(friend: CreateFriend): Promise<CreateFriendResponse> {
+        // prettier-ignore
+        return this.http
+            .post<AR<CreateFriendResponse>>(this.makeUrl('friends'), friend)
             .then(extract)
             .catch(rethrow);
     }
