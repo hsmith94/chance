@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { BASE_URL } from '../../config/variables';
-import { CreateFriend, Friend } from '../../models/Friend/Friend';
+import { Friend, FriendMetadata } from '../../models/Friend/Friend';
 import { ApiServiceConfig, BaseApiService } from './shared/BaseApiService';
 import { Requests } from './shared/Requests';
 import { extract } from './shared/extract';
@@ -30,7 +30,7 @@ export class ApiService extends BaseApiService {
             .then(extract)
             .catch(rethrow);
     }
-    async createFriend(friend: CreateFriend): Promise<CreateFriendResponse> {
+    async createFriend(friend: FriendMetadata): Promise<CreateFriendResponse> {
         // prettier-ignore
         return this.http
             .post<AR<CreateFriendResponse>>(this.makeUrl('friends'), friend)

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import LoadingSpinner from '../../../../components/LoadingSpinner';
+import { DEFAULT_PADDING } from '../../../../config/styles';
 import { useLoadingContext } from '../../../../contexts/Loading/LoadingProvider';
 import { Friend } from '../../../../models/Friend/Friend';
 import { apiService } from '../../../../services/api/ApiService';
@@ -25,15 +26,22 @@ export default function FriendScreen({ route, navigation }) {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {friend ? (
-                <>
-                    <Text variant="headlineMedium">{friend.name}</Text>
-                    <Text variant="labelSmall">{friend.id}</Text>
-                </>
+                <View style={styles.textContainer}>
+                    <Text style={styles.text} variant="headlineMedium">
+                        {friend.name}
+                    </Text>
+                    <Text style={styles.text} variant="labelSmall">
+                        {friend.id}
+                    </Text>
+                    <Text style={{ marginTop: DEFAULT_PADDING }} variant="bodyMedium">
+                        {friend.description}
+                    </Text>
+                </View>
             ) : null}
             <LoadingSpinner isLoading={isLoading} />
-        </View>
+        </ScrollView>
     );
 }
 
@@ -42,7 +50,14 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
+    textContainer: {
+        padding: DEFAULT_PADDING,
+        width: '100%',
+    },
+    text: {
+        textAlign: 'center',
     },
 });

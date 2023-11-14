@@ -33,21 +33,37 @@ class User:
 class Friend:
     id: str
     friend_of: str
+
     name: str
+    picture: str = None
+    description: str = None
+
+    create_date: str
+    update_date: str
 
     @staticmethod
     def make_id() -> str:
         return str(uuid.uuid4())
 
-    def __init__(self, friend_id: str, friend_of: str, name: str):
+    def __init__(self, friend_id: str, friend_of: str, name: str, create_date: str, update_date: str, picture: str = None, description: str = None,):
         self.id = friend_id
         self.friend_of = friend_of
+
         self.name = name
+        self.picture = picture
+        self.description = description
+
+        self.create_date = create_date
+        self.update_date = update_date
+
 
     def to_response(self) -> dict:
         return {
             'id': self.id,
             'name': self.name,
+            'picture': self.picture,
+            'description': self.description,
+            'isNew': self.create_date == self.update_date,
         }
 
 def make_database():
@@ -55,10 +71,10 @@ def make_database():
         'users': [],
         'friends': [
             # Test data (TODO: REMOVE!!)
-            Friend(friend_id='friend-1', friend_of='Harry', name='John Doe'),
-            Friend(friend_id='friend-2', friend_of='Harry', name='Jane Doe'),
-            Friend(friend_id='friend-3', friend_of='Harry', name='John Smith'),
-            Friend(friend_id='friend-4', friend_of='Harry', name='Jane Smith'),
+            Friend(friend_id='friend-1', friend_of='Harry', name='John Doe', create_date='2021-01-01', update_date='2021-01-01'),
+            Friend(friend_id='friend-2', friend_of='Harry', name='Jane Doe', create_date='2021-01-01', update_date='2021-01-01'),
+            Friend(friend_id='friend-3', friend_of='Harry', name='John Smith', create_date='2021-01-01', update_date='2021-01-01'),
+            Friend(friend_id='friend-4', friend_of='Harry', name='Jane Smith', create_date='2021-01-01', update_date='2021-01-01'),
         ],
     }
 

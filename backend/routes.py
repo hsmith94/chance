@@ -25,8 +25,19 @@ def get_friend(friend_id: str):
 @router.post('/friends')
 def create_friend(friend: dict):
     user_id = 'Harry' # While testing (TODO: REMOVE!!!!)
+    todays_date = '2021-01-01' # While testing (TODO: REMOVE!!!!)
     friend_id = Friend.make_id()
-    friend = Friend(friend_id=friend_id, friend_of=user_id, name=friend['name'])
+    friend = Friend(
+        friend_id=friend_id, 
+        friend_of=user_id, 
+
+        name=friend['name'],
+        description=friend.get('description', None),
+        picture=friend.get('picture', None),
+
+        create_date=todays_date, 
+        update_date=todays_date
+    )
     db.put_friend(user_id, friend)
     return {
         'friendId': friend_id
