@@ -2,5 +2,7 @@
  * Values which change depending on the environment.
  */
 
-// export const ENV = 'development';
-export const ENV = 'production';
+type Environment = 'development' | 'production';
+
+export const ENV: Environment = 'development';
+// export const ENV: Environment = 'production';
