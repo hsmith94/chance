@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import _ from 'lodash';
+import { Alert, Platform } from 'react-native';
 import AuthSession from '../../services/auth/AuthSession';
 import { VALIDATION_ERRORS } from './errors';
 import LoginScreen from './screens/LoginScreen';
@@ -21,14 +22,22 @@ export default function LoginStackScreen({ onSignIn }: LoginStackScreenProps) {
         onSignIn();
     };
 
+    const showAlert = (message: string) => {
+        if (Platform.OS === 'web') {
+            window.alert(message);
+        } else {
+            Alert.alert('Login failed', message, [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
+        }
+    };
+
     const handleLoginFailure = (error: Error) => {
         console.error('Login failure:', error);
 
         // Show feedback to user
         if (VALIDATION_ERRORS.includes(error.message)) {
-            alert('Login failed: ' + error.message);
+            showAlert(error.message);
         } else {
-            alert('Login failed: An internal error occurred');
+            showAlert('An internal error occurred');
         }
     };
 
@@ -37,9 +46,9 @@ export default function LoginStackScreen({ onSignIn }: LoginStackScreenProps) {
 
         // Show feedback to user
         if (VALIDATION_ERRORS.includes(error.message)) {
-            alert('Login failed: ' + error.message);
+            showAlert(error.message);
         } else {
-            alert('Login failed: An internal error occurred');
+            showAlert('An internal error occurred');
         }
     };
 

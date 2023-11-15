@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, Button, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { PASSWORD_MIN_LENGTH } from '../../../config/constants';
 import { ER_PASSWORDS_DO_NOT_MATCH, ER_PASSWORD_TOO_SHORT, VALIDATION_ERRORS } from '../errors';
 
@@ -26,6 +26,14 @@ function UsernamePasswordForm({ action, onSubmit, hasConfirmPassword }: Username
         return true;
     }
 
+    const showAlert = (message: string) => {
+        if (Platform.OS === 'web') {
+            window.alert(message);
+        } else {
+            Alert.alert('Login failed', message, [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
+        }
+    };
+
     const handleSubmit = () => {
         try {
             validateForm();
@@ -35,9 +43,9 @@ function UsernamePasswordForm({ action, onSubmit, hasConfirmPassword }: Username
                 throw err;
             }
             if (VALIDATION_ERRORS.includes(err.message)) {
-                alert('Login failed: ' + err.message);
+                showAlert(err.message);
             } else {
-                alert('Login failed: An internal error ocurred');
+                showAlert('An internal error occurred');
             }
         }
     };
