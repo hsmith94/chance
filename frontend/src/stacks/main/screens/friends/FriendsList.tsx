@@ -1,7 +1,8 @@
 import { ScrollView, View } from 'react-native';
-import { Button, List, Text } from 'react-native-paper';
+import { Button, IconButton, List, Text } from 'react-native-paper';
 import { DEFAULT_PADDING } from '../../../../config/styles';
 import { Friend } from '../../../../models/Friend/Friend';
+import { FRIEND_SCREEN_NAV_TOKEN } from './FriendScreen';
 import { styles } from './FriendsListScreen';
 
 type FriendsListProps = {
@@ -9,9 +10,10 @@ type FriendsListProps = {
     // TODO: FIXME: `navigation` probably shouldn't be passed in as a prop
     navigation;
     addNewFriend: () => void;
+    deleteFriend: (friendId: string) => void;
 };
 
-export function FriendsList({ friendsList, navigation, addNewFriend }: FriendsListProps) {
+export function FriendsList({ friendsList, navigation, addNewFriend, deleteFriend }: FriendsListProps) {
     const hasFriendsList = friendsList && friendsList.length > 0;
 
     const renderFriendsList = () => {
@@ -25,12 +27,13 @@ export function FriendsList({ friendsList, navigation, addNewFriend }: FriendsLi
                     <List.Item
                         key={friend.id}
                         onPress={() =>
-                            navigation.navigate('Friend', {
+                            navigation.navigate(FRIEND_SCREEN_NAV_TOKEN, {
                                 friendId: friend.id,
                             })
                         }
                         title={friend.name}
                         left={() => <List.Icon icon="account-circle" style={{ paddingLeft: DEFAULT_PADDING }} />}
+                        right={() => <IconButton icon="delete" size={20} onPress={() => deleteFriend(friend.id)} />}
                     />
                 ))}
             </List.Section>

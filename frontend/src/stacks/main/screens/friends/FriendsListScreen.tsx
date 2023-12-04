@@ -1,3 +1,4 @@
+import { NavigationProp } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import LoadingSpinner from '../../../../components/LoadingSpinner';
@@ -6,9 +7,16 @@ import { useLoadingContext } from '../../../../contexts/Loading/LoadingProvider'
 import { Friend, FriendMetadata } from '../../../../models/Friend/Friend';
 import { apiService } from '../../../../services/api/ApiService';
 import { generateRandomName } from '../../../../services/names';
+import { EDIT_FRIEND_SCREEN_NAV_TOKEN } from './EditFriendScreen';
 import { FriendsList } from './FriendsList';
 
-export default function FriendsListScreen({ navigation }) {
+export const FRIENDS_LIST_SCREEN_NAV_TOKEN = 'My-Friends';
+
+export type FriendsListScreenProps = {
+    navigation: NavigationProp<any>;
+};
+
+export default function FriendsListScreen({ navigation }: FriendsListScreenProps) {
     const { isLoading, setIsLoading } = useLoadingContext();
 
     const [friendsList, setFriendsList] = useState<Friend[] | undefined>(undefined);
@@ -40,7 +48,7 @@ export default function FriendsListScreen({ navigation }) {
         await apiService
             .createFriend(friend)
             .then(async (response) => {
-                navigation.navigate('Friend', {
+                navigation.navigate(EDIT_FRIEND_SCREEN_NAV_TOKEN, {
                     friendId: response.friendId,
                 });
                 await loadFriendsList();
@@ -50,16 +58,33 @@ export default function FriendsListScreen({ navigation }) {
             });
     }
 
+    async function deleteFriend(friendId: string) {
+        setIsLoading(true);
+        await apiService
+            .deleteFriend(friendId)
+            .then(async () => {
+                await loadFriendsList();
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
     useEffect(() => {
-        if (!hasFriendsList) {
+        if (!hasFriendsList && !isLoading) {
             loadFriendsList();
         }
-    }, [friendsList]);
+    }, []);
 
     return (
         <View style={styles.container}>
-            {!isLoading && hasFriendsList ? (
-                <FriendsList friendsList={friendsList} navigation={navigation} addNewFriend={addNewFriend} />
+            {!isLoading ? (
+                <FriendsList
+                    friendsList={friendsList}
+                    navigation={navigation}
+                    addNewFriend={addNewFriend}
+                    deleteFriend={deleteFriend}
+                />
             ) : null}
             <LoadingSpinner isLoading={isLoading} />
         </View>

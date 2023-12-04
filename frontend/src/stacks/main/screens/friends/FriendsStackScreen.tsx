@@ -1,14 +1,28 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import FriendScreen from './FriendScreen';
-import FriendsListScreen from './FriendsListScreen';
+import EditFriendScreen, { EDIT_FRIEND_SCREEN_NAV_TOKEN } from './EditFriendScreen';
+import FriendScreen, { FRIEND_SCREEN_NAV_TOKEN } from './FriendScreen';
+import FriendsListScreen, { FRIENDS_LIST_SCREEN_NAV_TOKEN } from './FriendsListScreen';
 
 const FriendsStack = createNativeStackNavigator();
 
 export default function FriendsStackScreen() {
     return (
-        <FriendsStack.Navigator initialRouteName="My-Friends">
-            <FriendsStack.Screen name="My-Friends" component={FriendsListScreen} options={{ title: 'My Friends' }} />
-            <FriendsStack.Screen name="Friend" component={FriendScreen} options={{ title: 'Friend' }} />
+        <FriendsStack.Navigator initialRouteName={FRIENDS_LIST_SCREEN_NAV_TOKEN}>
+            <FriendsStack.Screen
+                name={FRIENDS_LIST_SCREEN_NAV_TOKEN}
+                component={FriendsListScreen as any}
+                options={{ title: 'My Friends' }}
+            />
+            <FriendsStack.Screen
+                name={FRIEND_SCREEN_NAV_TOKEN}
+                component={FriendScreen as any}
+                options={{ title: 'Friend' }}
+            />
+            <FriendsStack.Screen
+                name={EDIT_FRIEND_SCREEN_NAV_TOKEN}
+                component={EditFriendScreen as any}
+                options={{ title: 'Edit Friend' }}
+            />
         </FriendsStack.Navigator>
     );
 }

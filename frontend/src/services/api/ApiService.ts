@@ -10,7 +10,23 @@ type AR<T> = AxiosResponse<T>; // TODO: Refactor http sender to intrinsically ex
 
 type FriendsListResponse = { friends: Friend[] };
 type FriendResponse = { friend: Friend };
-type CreateFriendResponse = { friendId: Friend['id'] };
+type CreateFriendResponse = { friendId: Friend['id']; createdOn: string };
+type UpdateFriendResponse = { friendId: Friend['id']; updatedOn: string };
+type DeleteFriendResponse = { friendId: Friend['id']; deletedOn: string };
+
+/** Hit URL without using browser cache. */
+const noCache = () => {
+    return {
+        params: {
+            cache: Date.now(),
+        },
+        headers: {
+            'Cache-Control': 'no-cache',
+            Pragma: 'no-cache',
+            Expires: '0',
+        },
+    };
+};
 
 export class ApiService extends BaseApiService {
     constructor(httpCreator: Requests.ICreator<Requests.IHttpSender>, config: ApiServiceConfig) {
@@ -26,7 +42,7 @@ export class ApiService extends BaseApiService {
     async getFriend(friendId: Friend['id']): Promise<FriendResponse> {
         // prettier-ignore
         return this.http
-            .get<AR<FriendResponse>>(this.makeUrl('friends', friendId))
+            .get<AR<FriendResponse>>(this.makeUrl('friends', friendId), noCache())
             .then(extract)
             .catch(rethrow);
     }
@@ -34,6 +50,20 @@ export class ApiService extends BaseApiService {
         // prettier-ignore
         return this.http
             .post<AR<CreateFriendResponse>>(this.makeUrl('friends'), friend)
+            .then(extract)
+            .catch(rethrow);
+    }
+    async updateFriend(friendId: Friend['id'], friend: FriendMetadata): Promise<UpdateFriendResponse> {
+        // prettier-ignore
+        return this.http
+            .put<AR<UpdateFriendResponse>>(this.makeUrl('friends', friendId), friend)
+            .then(extract)
+            .catch(rethrow);
+    }
+    async deleteFriend(friendId: Friend['id']): Promise<DeleteFriendResponse> {
+        // prettier-ignore
+        return this.http
+            .delete<AR<DeleteFriendResponse>>(this.makeUrl('friends', friendId))
             .then(extract)
             .catch(rethrow);
     }

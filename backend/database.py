@@ -65,17 +65,17 @@ class Friend:
             'description': self.description,
             'isNew': self.create_date == self.update_date,
         }
+    
+    def get_property(self, prop, default=None):
+        try:
+            return getattr(self, prop)
+        except AttributeError:
+            return default
 
 def make_database():
     return {
         'users': [],
-        'friends': [
-            # Test data (TODO: REMOVE!!)
-            Friend(friend_id='friend-1', friend_of='Harry', name='John Doe', create_date='2021-01-01', update_date='2021-01-01'),
-            Friend(friend_id='friend-2', friend_of='Harry', name='Jane Doe', create_date='2021-01-01', update_date='2021-01-01'),
-            Friend(friend_id='friend-3', friend_of='Harry', name='John Smith', create_date='2021-01-01', update_date='2021-01-01'),
-            Friend(friend_id='friend-4', friend_of='Harry', name='Jane Smith', create_date='2021-01-01', update_date='2021-01-01'),
-        ],
+        'friends': [],
     }
 
 DATABASE = {
@@ -127,7 +127,26 @@ def get_friend(user_id: str, friend_id: str) -> Friend:
         raise Exception(ER_FRIEND_NOT_FOUND)
     return friends_row[0]
 
-def put_friend(user_id: str, friend: Friend) -> None:
+def add_friend(user_id: str, friend: Friend) -> None:
     if (user_id != friend.friend_of):
         raise Exception(ER_NOT_FRIEND_OF_USER)
     current_database['friends'].append(friend)
+
+def update_friend(user_id: str, friend_id: str, friend: Friend) -> None:
+    if (user_id != friend.friend_of):
+        raise Exception(ER_NOT_FRIEND_OF_USER)
+    friends_row = _get_from_table_by_properties('friends', {'friend_of': user_id, 'id': friend_id})
+    if (len(friends_row) == 0):
+        raise Exception(ER_FRIEND_NOT_FOUND)
+    # find index
+    idx = current_database['friends'].index(friends_row[0])
+    current_database['friends'][idx] = friend
+
+
+def delete_friend(user_id: str, friend_id: str) -> None:
+    friends_row = _get_from_table_by_properties('friends', {'friend_of': user_id, 'id': friend_id})
+    if (len(friends_row) == 0):
+        raise Exception(ER_FRIEND_NOT_FOUND)
+    # find index
+    idx = current_database['friends'].index(friends_row[0])
+    del current_database['friends'][idx]
