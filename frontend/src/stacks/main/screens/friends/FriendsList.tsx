@@ -1,9 +1,8 @@
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, IconButton, List, Text } from 'react-native-paper';
 import { DEFAULT_PADDING } from '../../../../config/styles';
 import { Friend } from '../../../../models/Friend/Friend';
 import { FRIEND_SCREEN_NAV_TOKEN } from './FriendScreen';
-import { styles } from './FriendsListScreen';
 
 type FriendsListProps = {
     friendsList: Friend[] | undefined;
@@ -54,9 +53,20 @@ export function FriendsList({ friendsList, navigation, addNewFriend, deleteFrien
             <ScrollView style={{ width: '100%' }}>
                 {hasFriendsList ? renderFriendsList() : renderEmptyListMessage()}
             </ScrollView>
-            <Button onPress={() => addNewFriend()} icon="plus" mode="contained">
+            <Button style={styles.newFriendButton} onPress={() => addNewFriend()} icon="plus" mode="contained">
                 New Friend
             </Button>
         </>
     );
 }
+
+export const styles = StyleSheet.create({
+    list: {
+        flex: 1,
+        width: '100%',
+    },
+    newFriendButton: {
+        marginTop: DEFAULT_PADDING,
+        marginBottom: DEFAULT_PADDING,
+    },
+});

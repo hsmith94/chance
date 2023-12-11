@@ -1,13 +1,16 @@
 import { NavigationProp } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import LoadingSpinner from '../../../../components/LoadingSpinner';
 import { LIPSUM } from '../../../../config/constants';
+import { DEFAULT_PADDING } from '../../../../config/styles';
 import { useLoadingContext } from '../../../../contexts/Loading/LoadingProvider';
 import { Friend, FriendMetadata } from '../../../../models/Friend/Friend';
 import { apiService } from '../../../../services/api/ApiService';
-import { generateRandomName } from '../../../../services/names';
+import { generateRandomName, pickRandomFriend } from '../../../../services/random/random';
 import { EDIT_FRIEND_SCREEN_NAV_TOKEN } from './EditFriendScreen';
+import { FRIEND_SCREEN_NAV_TOKEN } from './FriendScreen';
 import { FriendsList } from './FriendsList';
 
 export const FRIENDS_LIST_SCREEN_NAV_TOKEN = 'My-Friends';
@@ -70,6 +73,16 @@ export default function FriendsListScreen({ navigation }: FriendsListScreenProps
             });
     }
 
+    function goToRandomFriend() {
+        if (!friendsList) {
+            throw Error('Friends list is undefined');
+        }
+        const randomFriend = pickRandomFriend(friendsList);
+        navigation.navigate(FRIEND_SCREEN_NAV_TOKEN, {
+            friendId: randomFriend.id,
+        });
+    }
+
     useEffect(() => {
         if (!hasFriendsList && !isLoading) {
             loadFriendsList();
@@ -79,12 +92,17 @@ export default function FriendsListScreen({ navigation }: FriendsListScreenProps
     return (
         <View style={styles.container}>
             {!isLoading ? (
-                <FriendsList
-                    friendsList={friendsList}
-                    navigation={navigation}
-                    addNewFriend={addNewFriend}
-                    deleteFriend={deleteFriend}
-                />
+                <>
+                    <Button style={styles.randomFriendButton} onPress={() => goToRandomFriend()} mode="outlined">
+                        Random Friend
+                    </Button>
+                    <FriendsList
+                        friendsList={friendsList}
+                        navigation={navigation}
+                        addNewFriend={addNewFriend}
+                        deleteFriend={deleteFriend}
+                    />
+                </>
             ) : null}
             <LoadingSpinner isLoading={isLoading} />
         </View>
@@ -100,9 +118,8 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
     },
-    button: {},
-    list: {
-        flex: 1,
-        width: '100%',
+    randomFriendButton: {
+        marginTop: DEFAULT_PADDING,
+        marginBottom: DEFAULT_PADDING,
     },
 });
